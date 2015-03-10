@@ -73,7 +73,7 @@ exports.message = function(req, res) {
 			client.sendMessage({
 				to: req.body.From,
 				from: '+15125809414',
-				body: req.body.Body
+				body: message
 			}, function(err, responseData) {
 				if (!err) {
 					console.log(responseData.from);
