@@ -68,6 +68,8 @@ exports.message = function(req, res) {
 		if (!witRes.outcomes) {
 			message = 'Uhm try again.';
 		} else {
+			message = witRes.outcomes[0].intent;
+		}
 			client.sendMessage({
 				to: req.body.From,
 				from: '+15125809414',
@@ -78,7 +80,6 @@ exports.message = function(req, res) {
 					console.log(responseData.body);
 				}
 			});
-		}
 	});
 	res.send(null);
 };
