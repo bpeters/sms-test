@@ -62,7 +62,7 @@ exports.message = function(req, res) {
 
 			to: req.body.From, // Any number Twilio can deliver to
 			from: '+15125809414', // A number you bought from Twilio and can use for outbound communication
-			body: 'Why hello ' + req.body.body // body of the SMS message
+			body: 'Why hello ' + req.body.Body // body of the SMS message
 
 	}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
