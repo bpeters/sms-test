@@ -3,10 +3,12 @@ var React = require('react');
 var _ = require('lodash');
 var config = require('config');
 
-// Your accountSid and authToken from twilio.com/user/account
-var accountSid = process.env.ACCOUNT_SID || config.get('Twilio.sid');
-var authToken = process.env.AUTH_TOKEN || config.get('Twilio.token');
-var client = require('twilio')(accountSid, authToken);
+var twilioSid = process.env.TWILIO_ACCOUNT_SID || config.get('Twilio.sid');
+var twilioToken = process.env.TWILIO_AUTH_TOKEN || config.get('Twilio.token');
+var client = require('twilio')(twilioSid, twilioToken);
+
+var wit = require('node-wit');
+var witToken = process.env.WIT_AUTH_TOKEN || config.get('Wit.token');
 
 var App = require('../react/App.jsx');
 var App = React.createFactory(App);
@@ -47,35 +49,36 @@ exports.index = function(req, res) {
 		data.messages.forEach(function(message) {
 				messages.push(message);
 		});
-		var params = paramsFromReq(req, messages[0].body);
-		var markup = React.renderToString(App({
-			title: 'Home',
-			params: params
-		}));
-		res.send('<!DOCTYPE html>' + markup);
+		wit.captureTextIntent(witToken, messages[0].body, function (err, witRes) {
+			var params = paramsFromReq(req, witRes);
+			var markup = React.renderToString(App({
+				title: 'Home',
+				params: params
+			}));
+			res.send('<!DOCTYPE html>' + markup);
+		});
 	});
 };
 
 exports.message = function(req, res) {
-	console.log(req.body);
-	client.sendMessage({
-
-			to: req.body.From, // Any number Twilio can deliver to
-			from: '+15125809414', // A number you bought from Twilio and can use for outbound communication
-			body: 'Why hello ' + req.body.Body // body of the SMS message
-
-	}, function(err, responseData) { //this function is executed when a response is received from Twilio
-
-			if (!err) { // "err" is an error received during the request, if any
-
-					// "responseData" is a JavaScript object containing data received from Twilio.
-					// A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-					// http://www.twilio.com/docs/api/rest/sending-sms#example-1
-
-					console.log(responseData.from); // outputs "+14506667788"
-					console.log(responseData.body); // outputs "word to your mother."
-
-			}
+	var message;
+	wit.captureTextIntent(witToken, req.body.Body, function (err, witRes) {
+		if (err) console.log("Error: ", err);
+		console.log(JSON.stringify(witRes, null, " "));
+		if (!witRes.outcomes) {
+			message = 'Uhm try again.';
+		} else {
+			client.sendMessage({
+				to: req.body.From,
+				from: '+15125809414',
+				body: req.body.Body
+			}, function(err, responseData) {
+				if (!err) {
+					console.log(responseData.from);
+					console.log(responseData.body);
+				}
+			});
+		}
 	});
 	res.send(null);
 };

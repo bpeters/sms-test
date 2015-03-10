@@ -4,8 +4,11 @@
 		"app": "",
 		"javascript": ""
 	},
-  "Twilio" : {
-    "sid": "",
-    "token": ""
-  }
+	"Twilio" : {
+		"sid": "",
+		"token": ""
+	},
+	"Wit" : {
+		"token": ""
+	}
 }
