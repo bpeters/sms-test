@@ -57,6 +57,6 @@ exports.index = function(req, res) {
 };
 
 exports.message = function(req, res) {
-	console.log(req);
+	console.log(req.body);
 	res.send(null);
 };
