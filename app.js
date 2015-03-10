@@ -12,6 +12,13 @@ app.set('views', __dirname + '/views');
 app.set('view cache', false);
 swig.setDefaults({ cache: false });
 
+var bodyParser = require('body-parser');
+var multer = require('multer');
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(multer()); // for parsing multipart/form-data
+
 //public routes
 app.get('/', routes.index);
 app.post('/sms/reply/', routes.message);
