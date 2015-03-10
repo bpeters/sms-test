@@ -57,6 +57,6 @@ exports.index = function(req, res) {
 };
 
 exports.message = function(req, res) {
-	var params = paramsFromReq(req);
-	console.log(params);
+	console.log(req);
+	res.send(null);
 };
