@@ -58,29 +58,29 @@ exports.index = function(req, res) {
 		data.messages.forEach(function(message) {
 				messages.push(message);
 		});
-		wit.captureTextIntent(witToken, messages[0].body, function (err, witRes) {
-			var params = paramsFromReq(req, witRes);
-			var markup = React.renderToString(App({
-				title: 'Home',
-				params: params
-			}));
-			res.send('<!DOCTYPE html>' + markup);
-		});
+		var params = paramsFromReq(req, messages[0]);
+		var markup = React.renderToString(App({
+			title: 'Home',
+			params: params
+		}));
+		res.send('<!DOCTYPE html>' + markup);
 	});
 };
 
 exports.message = function(req, res) {
-	var message;
+
+	var resp = new twilio.TwimlResponse();
+
 	gitWit(req.body.Body, function(error, wit) {
 		if (!wit.outcomes) {
-			message = 'Uhm try again.';
+			resp.message('Try again.');
 		} else {
-			message = wit.outcomes.join();
+			wit.outcomes.forEach(function(outcome) {
+				resp.message(outcome.intent + ' ' + outcome.confidence);
+			});
 		}
-		var resp = new twilio.TwimlResponse();
-		resp.message(message);
 		res.writeHead(200, {
-				'Content-Type':'text/xml'
+			'Content-Type':'text/xml'
 		});
 		res.end(resp.toString());
 	});
