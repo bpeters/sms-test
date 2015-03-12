@@ -2,6 +2,7 @@ require('node-jsx').install({extension: '.jsx'});
 var React = require('react');
 var _ = require('lodash');
 var config = require('config');
+var twilio = require('twilio');
 
 var twilioSid = process.env.TWILIO_ACCOUNT_SID || config.get('Twilio.sid');
 var twilioToken = process.env.TWILIO_AUTH_TOKEN || config.get('Twilio.token');
@@ -61,6 +62,7 @@ exports.index = function(req, res) {
 };
 
 exports.message = function(req, res) {
+	/*
 	var message;
 	wit.captureTextIntent(witToken, req.body.Body, function (err, witRes) {
 		if (err) console.log("Error: ", err);
@@ -81,5 +83,20 @@ exports.message = function(req, res) {
 				}
 			});
 	});
-	res.send(null);
+	*/
+// Create a TwiML response
+		var resp = new twilio.TwimlResponse();
+
+		// The TwiML response object will have functions on it that correspond
+		// to TwiML "verbs" and "nouns". This example uses the "Say" verb.
+		// Passing in a string argument sets the content of the XML tag.
+		// Passing in an object literal sets attributes on the XML tag.
+		resp.message('ahoy hoy! Testing Twilio and node.js');
+ 
+		//Render the TwiML document using "toString"
+		res.writeHead(200, {
+				'Content-Type':'text/xml'
+		});
+		res.send(resp.toString());
+
 };
