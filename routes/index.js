@@ -44,6 +44,14 @@ function paramsFromReq(req, data) {
 	});
 */
 
+function gitWit(sms, callback){
+	wit.captureTextIntent(witToken, sms, function (err, res) {
+		if (err) return callback(err, null);
+		console.log(JSON.stringify(res, null, " "));
+		return callback(null, res);
+	});
+}
+
 exports.index = function(req, res) {
 	var messages = [];
 	client.messages.list(function(err, data) {
@@ -62,41 +70,18 @@ exports.index = function(req, res) {
 };
 
 exports.message = function(req, res) {
-	/*
 	var message;
-	wit.captureTextIntent(witToken, req.body.Body, function (err, witRes) {
-		if (err) console.log("Error: ", err);
-		console.log(JSON.stringify(witRes, null, " "));
-		if (!witRes.outcomes) {
+	gitWit(req.body.Body, function(error, wit) {
+		if (!wit.outcomes) {
 			message = 'Uhm try again.';
 		} else {
-			message = witRes.outcomes[0].intent;
+			message = wit.outcomes.join();
 		}
-			client.sendMessage({
-				to: req.body.From,
-				from: '+15125809414',
-				body: message
-			}, function(err, responseData) {
-				if (!err) {
-					console.log(responseData.from);
-					console.log(responseData.body);
-				}
-			});
-	});
-	*/
-// Create a TwiML response
 		var resp = new twilio.TwimlResponse();
-
-		// The TwiML response object will have functions on it that correspond
-		// to TwiML "verbs" and "nouns". This example uses the "Say" verb.
-		// Passing in a string argument sets the content of the XML tag.
-		// Passing in an object literal sets attributes on the XML tag.
-		resp.message('ahoy hoy! Testing Twilio and node.js');
- 
-		//Render the TwiML document using "toString"
+		resp.message(message);
 		res.writeHead(200, {
 				'Content-Type':'text/xml'
 		});
 		res.end(resp.toString());
-
+	});
 };
