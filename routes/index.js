@@ -22,6 +22,14 @@ function paramsFromReq(req, data) {
 	return params;
 }
 
+function gitWit(sms, callback){
+	wit.captureTextIntent(witToken, sms, function (err, res) {
+		if (err) return callback(err, null);
+		console.log(JSON.stringify(res, null, " "));
+		return callback(null, res);
+	});
+}
+
 /*
 	client.sendMessage({
 
@@ -44,27 +52,13 @@ function paramsFromReq(req, data) {
 	});
 */
 
-function gitWit(sms, callback){
-	wit.captureTextIntent(witToken, sms, function (err, res) {
-		if (err) return callback(err, null);
-		console.log(JSON.stringify(res, null, " "));
-		return callback(null, res);
-	});
-}
-
 exports.index = function(req, res) {
-	var messages = [];
-	client.messages.list(function(err, data) {
-		data.messages.forEach(function(message) {
-				messages.push(message);
-		});
-		var params = paramsFromReq(req, messages[0]);
-		var markup = React.renderToString(App({
-			title: 'Home',
-			params: params
-		}));
-		res.send('<!DOCTYPE html>' + markup);
-	});
+	var params = paramsFromReq(req);
+	var markup = React.renderToString(App({
+		title: 'Home',
+		params: params
+	}));
+	res.send('<!DOCTYPE html>' + markup);
 };
 
 exports.message = function(req, res) {

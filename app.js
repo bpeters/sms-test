@@ -19,6 +19,26 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer()); // for parsing multipart/form-data
 
+var request = require('request');
+var options = {
+  method: 'GET',
+  json: {},
+  uri: 'https://api.clever.com/v1.1/sections',
+  headers: {
+    Authorization: 'Bearer DEMO_TOKEN'
+  }
+};
+var sumStudents = 0;
+var sections = 0;
+request(options, function(err, response, body) {
+	sections = body.data.length;
+	for (var i = 0; i < body.data.length; i++) {
+		console.log(body.data[i].data.students.length);
+		sumStudents = sumStudents + body.data[i].data.students.length;
+	}
+	console.log(sumStudents / sections);
+});
+
 //public routes
 app.get('/', routes.index);
 app.post('/sms/reply/', routes.message);

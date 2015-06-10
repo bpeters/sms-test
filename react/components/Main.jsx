@@ -1,4 +1,6 @@
 var React = require('react/addons');
+var AppBar = require('material-ui').AppBar;
+var TextField = require('material-ui').TextField;
 
 module.exports = React.createClass({
 	displayName: 'Main',
@@ -8,7 +10,8 @@ module.exports = React.createClass({
 	render: function() {
 		return (
 			<div>
-				{this.props.params}
+				<AppBar title="Title" />
+				<TextField />
 			</div>
 		);
 	}

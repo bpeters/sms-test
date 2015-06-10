@@ -21,6 +21,7 @@ module.exports = React.createClass({
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
 					<meta name="viewport" content="width=device-width, initial-scale=1"/>
 					<title>{this.props.title}</title>
+					<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css' />
 					<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
 					<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
 					<link href="/css/style.css" rel="stylesheet" />
